@@ -40,6 +40,9 @@ SukhumiDefSpawn = Spawner("SukhumiDefense")
 RussianTheaterAirfieldDefSpawn = Spawner("Russia-Airfield-Def")
 
 AttackableAirbases = function(airbaseList)
+    -- why is this function not using game_state instead? The
+    -- airbase game_state is updated via an event handler so
+    -- it is likely very accurate
     local filtered = {}
     log("Iterating airbases")
     for i,ab in ipairs(airbaseList) do

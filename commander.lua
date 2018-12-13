@@ -21,6 +21,32 @@ local max_caps_for_player_count = function(x)
 	return caps
 end
 
+local utility_cap = function()
+	--[[
+	-- CAP Goal/Limits
+	--   min: ??; max: ??
+	--
+	-- Parameters that affect number of CAPs available, where and when
+	-- they spawn;
+	--   effects maximum available local a/c
+	--   * # ammo dumps
+	--   * # airports
+	--
+	--   effects commander response time
+	--   * # C2 sites
+	--   * # ewrs (early warning radars)
+	--   * # AWACS
+	--
+	--   effects availability and frequency of off-theater a/c
+	--   * # comms arrays
+	--
+	-- CAP spawn options:
+	--  in-theater, off-theater
+	--
+	-- 
+	--]]
+end
+
 -- Main game loop, decision making about spawns happen here.
 russian_commander = function()
     -- Russian Theater Decision Making
