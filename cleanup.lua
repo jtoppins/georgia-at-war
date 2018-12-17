@@ -14,7 +14,7 @@ function cleanup()
 
             log("There are " .. alive_units .. " in BAI target " .. baitarget_table['callsign'])
             if alive_units == 0 or alive_units / baitarget:getInitialSize() * 100 < 30 then
-                trigger.action.outText("BAI target " .. baitarget_table['callsign'] .. " destroyed!", 15)
+                MessageToAll("BAI target " .. baitarget_table['callsign'] .. " destroyed!", 15)
                 log("Not enough units, destroying")
                 baitarget:destroy()
                 baitargets[group_name] = nil
@@ -23,7 +23,7 @@ function cleanup()
             --for i,rearm_spawn in ipairs(rearm_spawns) do
             --    rearm_spawn[1]:Spawn()
            -- end
-            trigger.action.outText("BAI target " .. baitarget_table['callsign'] .. " destroyed!", 15)
+            MessageToAll("BAI target " .. baitarget_table['callsign'] .. " destroyed!", 15)
             baitargets[group_name] = nil
         end
     end
@@ -34,7 +34,7 @@ function cleanup()
     for group_name, group_table in pairs(c2s) do
         local callsign = group_table['callsign']
         if groupIsDead(group_name) then
-            trigger.action.outText("Mobile CP " .. group_table['callsign'] .. " destroyed!", 15)
+            MessageToAll("Mobile CP " .. group_table['callsign'] .. " destroyed!", 15)
             game_state["Theaters"]["Russian Theater"]["C2"][group_name] = nil
         end
     end
@@ -52,7 +52,7 @@ function cleanup()
         end
 
         if alive_units == 0 then
-            trigger.action.outText("Strike Target " .. group_table['callsign'] .. " destroyed!", 15)
+            MessageToAll("Strike Target " .. group_table['callsign'] .. " destroyed!", 15)
             game_state["Theaters"]["Russian Theater"]["StrikeTargets"][group_name] = nil
         else
             log(group_name .. " has " .. alive_units .. " buildings alive.")

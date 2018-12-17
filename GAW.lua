@@ -306,7 +306,7 @@ function handleDeaths(event)
       if radars == 0 or launchers == 0 then
         log("SAM considered dead. removing from state")
         game_state['Theaters']['Russian Theater']['StrategicSAM'][grp:getName()] = nil
-        trigger.action.outText("SAM " .. checkedSams[grp:getName()] .. " has been destroyed!", 15)
+        MessageToAll("SAM " .. checkedSams[grp:getName()] .. " has been destroyed!", 15)
         checkedSams[grp:getName()] = nil
       end
     end
@@ -322,7 +322,7 @@ function handleDeaths(event)
       if cps == 0 then
         log("C2 group considered dead. removing from state")
         game_state['Theaters']['Russian Theater']['C2'][grp:getName()] = nil
-        trigger.action.outText("C2 " .. checkedC2s[grp:getName()] .. " has been destroyed!", 15)
+        MessageToAll("C2 " .. checkedC2s[grp:getName()] .. " has been destroyed!", 15)
         checkedC2s[grp:getName()] = nil
       end
     end
@@ -337,7 +337,7 @@ function handleDeaths(event)
       if ewrs == 0 then
         log("EWR considered dead. removing from state")
         game_state['Theaters']['Russian Theater']['EWR'][grp:getName()] = nil
-        trigger.action.outText("EWR " .. checkedEWRs[grp:getName()] .. " has been destroyed!", 15)
+        MessageToAll("EWR " .. checkedEWRs[grp:getName()] .. " has been destroyed!", 15)
         checkedEWRs[grp:getName()] = nil
       end
     end
