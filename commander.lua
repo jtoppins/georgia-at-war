@@ -1,3 +1,21 @@
+local clamp = function(x, min, max)
+    local v = x
+    if x < min then
+        v = min
+    elseif x > max then
+        v = max
+    end
+    return v
+end
+
+local get_player_count = function()
+    local bluePlanes = mist.makeUnitTable({'[blue][plane]'})
+    local bluePlaneCount = 0
+    for i,v in pairs(bluePlanes) do
+        if Unit.getByName(v) then bluePlaneCount = bluePlaneCount + 1 end
+    end
+end
+
 local array_size = function(o)
 	local num = 0
 	for i, j in pairs(o) do
@@ -18,11 +36,100 @@ local max_caps_for_player_count = function(x)
 	else
 		caps = 4
 	end
+
+    log("There are " .. x .. " blue planes in the mission, so we'll spawn a max of " ..
+        caps .. " groups of enemy CAP")
 	return caps
 end
 
-local utility_cap = function()
+c2_utility = function(c2)
+    return math.pow(c2.alive/c2.nominal, 2)
+end
+
+
+local get_objective_stats = function()
+    local stats = {
+        c2 = {
+            alive = 0,
+            nominal = 3,
+            tbl   = game_state["Theaters"]["Russian Theater"]["C2"],
+        },
+        ewr = {
+            alive = 0,
+            nominal = 3,
+            tbl   = game_state["Theaters"]["Russian Theater"]["EWR"],
+        },
+        awacs = {
+            alive = 0,
+            nominal = 1,
+            tbl   = game_state["Theaters"]["Russian Theater"]["AWACS"],
+        },
+        bai = {
+            alive = 0,
+            nominal = 5,
+            tbl = game_state["Theaters"]["Russian Theater"]["BAI"],
+        },
+        ammo = {
+            alive = 0,
+            nominal = 3,
+            tbl   = game_state["Theaters"]["Russian Theater"]["StrikeTargets"],
+            subtype = "AmmoDump",
+        },
+        comms = {
+            alive = 0,
+            nominal = 3,
+            tbl   = game_state["Theaters"]["Russian Theater"]["StrikeTargets"],
+            subtype = "CommsArray",
+        },
+        caps = {
+            alive = 0,
+            nominal = 0,
+            tbl = game_state["Theaters"]["Russian Theater"]["CAP"],
+        },
+        airports = {
+            alive = 0,
+            nominal = 3,
+            tbl = nil, -- TODO
+        },
+    }
+
+    -- Get Alive BAI Targets
+    stats.bai.alive = array_size(stats.bai.tbl)
+    log("The Russian commander has " .. stats.bai.alive .. " ground squads alive.")
+
+    -- Get the number of EWRs in existence, as we use this for determination of spawn rates
+    stats.ewr.alive = array_size(stats.ewr.tbl)
+    log("Russian commanbder has " .. stats.ewr.alive .. " EWRs available...")
+
+    -- Get the number of C2s in existance, and cleanup the state for dead ones.
+    -- We'll make some further determiniation of what happens based on this
+    stats.c2.alive = array_size(stats.c2.tbl)
+    log("Russian commander has " .. stats.c2.alive .. " command posts available...")
+
+    for group_name, group_table in pairs(stats.ammo.tbl) do
+      if group_table['spawn_name'] == stats.ammo.subtype then stats.ammo.alive = stats.ammo.alive + 1 end
+      if group_table['spawn_name'] == stats.comms.subtype then stats.comms.alive = stats.comms.alive + 1 end
+    end
+    log("Russian commander has " .. stats.ammo.alive .. " Ammo Dumps available...")
+    log("Russian commander has " .. stats.comms.alive .. " Comms Arrays available...")
+
+    stats.caps.nominal = max_caps_for_player_count(get_player_count())
+    stats.caps.alive = #stats.caps.tbl
+    log("The Russian commander has " .. stats.caps.alive .. " flights alive")
+    return stats
+end
+
+command_delay = function(c2)
+    local delay_max = 600 * .7
+    local delay_min = 20
+
+    return clamp(delay_min + delay_max * (1 - 1), delay_min, delay_max)
+end
+
+local _cap = function(stats)
 	--[[
+    -- [spawn list] = get_cap(stats)
+    --
 	-- CAP Goal/Limits
 	--   min: ??; max: ??
 	--
@@ -32,7 +139,7 @@ local utility_cap = function()
 	--   * # ammo dumps
 	--   * # airports
 	--
-	--   effects commander response time
+	--   effects overall commander response time
 	--   * # C2 sites
 	--   * # ewrs (early warning radars)
 	--   * # AWACS
@@ -43,36 +150,23 @@ local utility_cap = function()
 	-- CAP spawn options:
 	--  in-theater, off-theater
 	--
-	-- 
+	-- Actions available:
+    --   * spawn advanced cap in-theater
+    --   * spawn crappy cap in-theater
+    --   * spawn advanced cap off-theater
+    --   * spawn crappy cap off-theater
+    --
+    -- Force Protection Desire - desire to launch more CAP a/c
+    --      U = f(players, alive caps)
+    --  * in-theater adv, U = f(ammo, airports, alive caps)
+    --  * in-theater poo, U = f(airports, alive caps)
+    --  * off-theater adv, U = f(ammo, comms, alive caps)
+    --  * off-theater poo, U = f(ammo, comms, alive caps)
+    -- Intel Desire - desire to launch an AWACS, U = f(c2s, ewrs, awacs)
+    --
 	--]]
-end
 
--- Main game loop, decision making about spawns happen here.
-russian_commander = function()
-    -- Russian Theater Decision Making
-    log("Russian commander is thinking...")
-    local bluePlanes = mist.makeUnitTable({'[blue][plane]'})
-    local bluePlaneCount = 0
-    for i,v in pairs(bluePlanes) do
-        if Unit.getByName(v) then bluePlaneCount = bluePlaneCount + 1 end
-    end
-    local time = timer.getAbsTime() + env.mission.start_time
-    local c2s = game_state["Theaters"]["Russian Theater"]["C2"]
-    local caps = game_state["Theaters"]["Russian Theater"]["CAP"]
-    local castargets = game_state["Theaters"]["Russian Theater"]["CASTargets"]
-    local baitargets = game_state["Theaters"]["Russian Theater"]["BAI"]
-    local ewrs = game_state["Theaters"]["Russian Theater"]["EWR"]
-    local striketargets = game_state["Theaters"]["Russian Theater"]["StrikeTargets"]
-    local last_cap_spawn = game_state["Theaters"]["Russian Theater"]["last_cap_spawn"]
-    local random_cap = 0
     local adcap_chance = 0.4
-    local aliveAWACs = 0
-    local aliveEWRs = 0
-    local aliveAmmoDumps = 0
-    local aliveCommsArrays = 0
-    local alivec2s = 0
-    local alive_caps = 0
-    local max_caps = 3
     local nominal_c2s = 4
     local nominal_awacs = 1
     local nominal_ammodumps = 3
@@ -82,64 +176,11 @@ russian_commander = function()
     local p_attack_airbase = 0.2
     local p_spawn_airbase_cap = 0.7
 
-    max_caps = max_caps_for_player_count(bluePlaneCount)
-    log("There are " .. bluePlaneCount .. " blue planes in the mission, so we'll spawn a max of " .. max_caps .. " groups of enemy CAP")
-
-    local alive_bai_targets = 0
-
-    local max_bai = 5
-
-    -- Get the number of C2s in existance, and cleanup the state for dead ones.
-    -- We'll make some further determiniation of what happens based on this
-    alivec2s = array_size(c2s)
-    log("Russian commander has " .. alivec2s .. " command posts available...")
-    
-    
-    -- Get the number of EWRs in existence, as we use this for determination of spawn rates
-    aliveEWRs = array_size(ewrs)
-    log("Russian commanbder has " .. aliveEWRs .. " EWRs available...")
-    
-    for group_name, group_table in pairs(striketargets) do
-      if group_table['spawn_name'] == 'AmmoDump' then aliveAmmoDumps = aliveAmmoDumps + 1 end
-      if group_table['spawn_name'] == 'CommsArray' then aliveCommsArrays = aliveCommsArrays + 1 end
-    end
-    
-    log("Russian commander has " .. aliveAmmoDumps .. " Ammo Dumps available...")
-    log("Russian commander has " .. aliveCommsArrays .. " Comms Arrays available...")
-
-    -- Get alive caps and cleanup state
-    for i=#caps, 1, -1 do
-        local cap = Group.getByName(caps[i])
-        if cap and isAlive(cap) then
-            if allOnGround(cap) then
-                cap:destroy()
-                log("Found inactive cap, removing")
-                table.remove(caps, i)
-            else
-                alive_caps = alive_caps + 1
-            end
-        else
-            table.remove(caps, i)
-        end
-    end
-
-
-    log("The Russian commander has " .. alive_caps .. " flights alive")
-    -- Get Alive BAI Targets
-    alive_bai_targets = array_size(baitargets)
-    log("The Russian commander has " .. alive_bai_targets .. " ground squads alive.")
-
-    --if alivec2s == 0 then log('Russian commander whispers "BLYAT!" and runs for the hills before he ends up in a gulag.'); return nil end
-
     -- Setup some decision parameters based on how many tactical resources are alive
     p_attack_airbase = 0.1 + 0.1*(aliveAmmoDumps/nominal_ammodumps) + 0.1*(alivec2s/nominal_c2s)
     p_spawn_mig31s = 0.65 + 0.1*(aliveEWRs/nominal_ewrs) + 0.1*(alivec2s/nominal_c2s)
     p_spawn_airbase_cap = 0.5 + 0.2*(aliveAmmoDumps/nominal_ammodumps) + 0.1*(1-(aliveCommsArrays/nominal_commsarrays))
-    
-    if alivec2s == 3 then random_cap = 30 end
-    if alivec2s == 2 then random_cap = 60; adcap_chance = 0.4 end
-    if alivec2s == 1 then random_cap = 120 adcap_chance = 0.8 end
-    local command_delay = math.random(10, random_cap)
+
     log("The Russian commander has a command delay of " .. command_delay .. " and a " .. (adcap_chance * 100) .. "% chance of getting decent planes...")
 
     if alive_caps < max_caps then
@@ -173,7 +214,19 @@ russian_commander = function()
         end
     end
 
-    if alive_bai_targets < max_bai then
+
+end
+
+-- Main game loop, decision making about spawns happen here.
+russian_commander = function()
+    -- Russian Theater Decision Making
+    log("Russian commander is thinking...")
+
+    local time = timer.getAbsTime() + env.mission.start_time
+    local objstats = get_objective_stats()
+    local cmd_delay = command_delay(objstats.c2)
+
+    if objstats.bai.alive < objstats.bai.max then
         log("The Russian Commander is going to request " .. (max_bai - alive_bai_targets) .. " additional strategic ground units")
         for i = alive_bai_targets + 1, max_bai do
             mist.scheduleFunction(function()
@@ -187,16 +240,6 @@ russian_commander = function()
 
     log("Checking interceptors...")
     if math.random() < p_spawn_mig31s then
-        for i,g in ipairs(enemy_interceptors) do
-            if allOnGround(g) then
-                Group.getByName(g):destroy()
-            end
-
-            if not isAlive(g) then
-                enemy_interceptors = {}
-            end
-        end
-
         if #enemy_interceptors == 0 then
             RussianTheaterMig312ShipSpawn:Spawn()
         end

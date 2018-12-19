@@ -18,6 +18,7 @@ function cleanup()
                 log("Not enough units, destroying")
                 baitarget:destroy()
                 baitargets[group_name] = nil
+                game_stats.bai.alive = game_stats.bai.alive - 1
             end
         else
             --for i,rearm_spawn in ipairs(rearm_spawns) do
@@ -25,6 +26,7 @@ function cleanup()
            -- end
             MessageToAll("BAI target " .. baitarget_table['callsign'] .. " destroyed!", 15)
             baitargets[group_name] = nil
+            game_stats.bai.alive = game_stats.bai.alive - 1
         end
     end
 
@@ -36,6 +38,7 @@ function cleanup()
         if groupIsDead(group_name) then
             MessageToAll("Mobile CP " .. group_table['callsign'] .. " destroyed!", 15)
             game_state["Theaters"]["Russian Theater"]["C2"][group_name] = nil
+            game_stats.c2.alive = game_stats.c2.alive - 1
         end
     end
 
@@ -70,6 +73,31 @@ function cleanup()
       else
         log("Objective " .. obj_name .. " is still alive with " .. Group.getByName(obj.groupName):getSize() .. " units")
       end
+    end
+
+    local caps = game_state["Theaters"]["Russian Theater"]["CAP"]
+    -- Get alive caps and cleanup state
+    for i=#caps, 1, -1 do
+        local cap = Group.getByName(caps[i])
+        if cap and isAlive(cap) then
+            if allOnGround(cap) then
+                cap:destroy()
+                log("Found inactive cap, removing")
+                table.remove(caps, i)
+            end
+        else
+            table.remove(caps, i)
+        end
+    end
+
+    for i,g in ipairs(enemy_interceptors) do
+        if allOnGround(g) then
+            Group.getByName(g):destroy()
+        end
+
+        if not isAlive(g) then
+            enemy_interceptors = {}
+        end
     end
     log("Done Clean script")
 end

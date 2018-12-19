@@ -485,6 +485,15 @@ AddObjective = function(type, id)
       }
 
       trigger.action.markToCoalition(id, objectiveTypeMap[type] .. " - " .. callsign, unit:getPosition().p, 2, true)
+      if type == "C2" then
+        game_stats.c2.alive = game_stats.c2.alive + 1
+      elseif type == "BAI" then
+        game_stats.bai.alive = game_stats.bai.alive + 1
+      elseif type == "AWACS" then
+        game_stats.awacs.alive = game_stats.awacs.alive + 1
+      elseif type == "EWR" then
+        game_stats.ewr.alive = game_stats.ewr.alive + 1
+      end
     end
   end
 end
@@ -498,6 +507,11 @@ AddStaticObjective = function(id, callsign, spawn_name, staticNames)
     ['markerID'] = id,
     ['statics'] = staticNames
   }
+  if spawn_name == "AmmoDump" then
+        game_stats.ammo.alive = game_stats.ammo.alive + 1
+  elseif spawn_name == "CommsArray" then
+        game_stats.ammo.alive = game_stats.ammo.alive + 1
+  end
 end
 
 AddConvoy = function(group, spawn_name, callsign)

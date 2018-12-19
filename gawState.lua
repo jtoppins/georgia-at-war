@@ -42,6 +42,15 @@ game_state = {
         }
     }
 }
+game_stats = {
+    c2    = { nominal = 4, alive = 0, state = { class = "C2",  subtype = nil }},
+    ewr   = { nominal = 2, alive = 0, state = { class = "EWR", subtype = nil }},
+    awacs = { nominal = 1, alive = 0, state = { class = "AWACS", subtype = nil }},
+    bai   = { nominal = 5, alive = 0, state = { class = "BAI", subtype = nil }},
+    ammo  = { nominal = 3, alive = 0, state = { class = "StrikeTargets", subtype = "AmmoDump" }},
+    comms = { nominal = 3, alive = 0, state = { class = "StrikeTargets", subtype = "CommsArray" }},
+    caps  = { nominal = 3, alive = 0, state = { class = "CAP", subtype = nil }},
+}
 
 log("Game State INIT")
 
