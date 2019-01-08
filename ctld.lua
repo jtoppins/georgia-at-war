@@ -5764,6 +5764,9 @@ end
 
 -- ***************** SETUP SCRIPT ****************
 
+
+function ctld.init()
+
 assert(mist ~= nil, "\n\n** HEY MISSION-DESIGNER! **\n\nMiST has not been loaded!\n\nMake sure MiST 3.6 or higher is running\n*before* running this script!\n")
 
 ctld.addedTo = {}
@@ -6080,3 +6083,4 @@ env.info("CTLD READY")
 --            env.info(tostring(key))
 --            env.info(tostring(value))
 --        end
+end

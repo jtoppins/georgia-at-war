@@ -330,4 +330,5 @@ mist.scheduleFunction(function()
 end, {}, timer.getTime() + 10, 1800)
 -- Kick off the commanders
 mist.scheduleFunction(russian_commander, {}, timer.getTime() + 10, 600)
+ctld.init()
 log("init.lua complete")
