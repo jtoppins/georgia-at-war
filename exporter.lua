@@ -1,6 +1,6 @@
 write_state = function()
     log("Writing State...")
-    local stateFile = lfs.writedir()..[[Scripts\GAW\state.json]]
+    local stateFile = XAW.stateFile
     local fp = io.open(stateFile, 'w')
     fp:write(json:encode(game_state))
     fp:close()

@@ -1,7 +1,3 @@
-local statefile = io.open(lfs.writedir() .. "Scripts\\GAW\\state.json", 'r')
-
--- Enable slotblock
-trigger.action.setUserFlag("SSB",100)
 if statefile then
     local ab_logi_slots = {
         ["Novorossiysk"] = NovoLogiSpawn,
