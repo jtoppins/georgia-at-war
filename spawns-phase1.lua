@@ -60,71 +60,6 @@ local logispawn = {
     category = "Ground vehicles"
 }
 
--- Forward Logistics spawns
-NovoLogiSpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = -39857.5703125,
-        ['y'] = 279000.5
-    },
-    "novologizone"
-}
-
-KryLogiSpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = -5951.622558,
-        ['y'] = 293862.25
-    },
-    "krymsklogizone"
-}
-
-KrasCenterLogiSpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = 11981.98046875,
-        ['y'] = 364532.65625
-    },
-    "krascenterlogizone"
-}
-
-KrasPashLogiSpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = 8229.2353515625,
-        ['y'] = 386831.65625
-    },
-    "kraspashlogizone"
-}
-
-MaykopLogiSpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = -26322.15625,
-        ['y'] = 421495.96875
-    },
-    "mklogizone"
-}
-
-SEFARPLogiSpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = -26322.15625,
-        ['y'] = 421495.96875
-    },
-    "sefarplogizone"
-}
-
--- Transport Spawns
-NorthGeorgiaTransportSpawns = {
-    ['Novorossiysk'] = {Spawner("NovoroTransport"), Spawner("NovoroTransportHelo"), NovoLogiSpawn},
-    ['Gelendzhik'] = {Spawner("GelenTransport"), Spawner("GelenTransportHelo"), nil},
-    ['Krasnodar-Center'] = {Spawner("KDARTransport"), Spawner("KrasCenterTransportHelo"), KrasCenterLogiSpawn},
-    ['Krasnodar_Pashkovsky'] = {Spawner("KDAR2Transport"), Spawner("KrasPashTransportHelo"), nil},
-    ['Krymsk'] = {Spawner("KrymskTransport"), Spawner("KrymskTransportHelo"), KryLogiSpawn}
-}
-
-NorthGeorgiaFARPTransportSpawns = {
-    ["NW"] = {Spawner("NW FARP HELO"), nil, nil},
-    ["NE"] = {Spawner("NE FARP HELO"), nil, nil},
-    ["SW"] = {Spawner("SW FARP HELO"),nil, nil},
-    ["SE"] = {Spawner("SE FARP HELO"),nil, SEFARPLogiSpawn},
-    ["MK"] = {Spawner("MK FARP HELO"), nil, MaykopLogiSpawn}
-}
 scheduledSpawns = {}
 DestructibleStatics = {}
 DestroyedStatics = {}
@@ -152,20 +87,12 @@ RussianTheaterSA10Spawn = { Spawner("SA10"), "SA10" }
 RussianTheaterSA6Spawn = { Spawner("SA6"), "SA6" }
 RussianTheaterEWRSpawn = { Spawner("EWR"), "EWR" }
 RussianTheaterC2Spawn = { Spawner("C2"), "C2" }
-RussianTheaterAirfieldDefSpawn = Spawner("Russia-Airfield-Def")
 RussianTheaterAWACSSpawn = Spawner("A50")
 RussianTheaterAWACSPatrol = Spawner("SU27-RUSAWACS Patrol")
 
 RussianTheaterAWACSSpawn:OnSpawnGroup(function(grp)
     scheduledSpawns[grp:getUnit(1):getName()] = {RussianTheaterAWACSSpawn, 1800}
 end)
-
--- REDFOR specific airfield defense spawns
-DefKrasPash = Spawner("Red Airfield Defense Kras-Pash 1")
-DefKrasCenter = Spawner("Red Airfield Defense Kras-Center 1")
-DefKrymsk = Spawner("Red Airfield Defense Krymsk 1")
-DefNovo = Spawner("Red Airfield Defense Novo 1")
-DefGlensPenis = Spawner("Red Airfield Defense GlensDick 1")
 
 -- CAP Redfor spawns
 RussianTheaterMig212ShipSpawn = Spawner("Mig21-2ship")
@@ -307,42 +234,26 @@ RussianTheaterAWACSSpawn:OnSpawnGroup(function(SpawnedGroup)
     RussianTheaterAWACSPatrol:Spawn()
 end)
 
---local sammenu = MENU_MISSION:New("DESTROY SAMS")
 RussianTheaterSA6Spawn[1]:OnSpawnGroup(function(SpawnedGroup)
     local callsign = getCallsign()
-    --MENU_MISSION_COMMAND:New("DESTROY " .. callsign, sammenu, function()
-    --    SpawnedGroup:Destroy()
-    --end)
-
     AddObjective("StrategicSAM", getMarkerId())(SpawnedGroup, RussianTheaterSA6Spawn[2], callsign)
     buildCheckSAMEvent(SpawnedGroup, callsign)
 end)
 
 RussianTheaterSA10Spawn[1]:OnSpawnGroup(function(SpawnedGroup)
     local callsign = getCallsign()
-    --MENU_MISSION_COMMAND:New("DESTROY " .. callsign, sammenu, function()
-    --    SpawnedGroup:Destroy()
-    --end)
     AddObjective("StrategicSAM", getMarkerId())(SpawnedGroup, RussianTheaterSA10Spawn[2], callsign)
     buildCheckSAMEvent(SpawnedGroup, callsign)
 end)
 
---local ewrmenu = MENU_MISSION:New("DESTROY EWRS")
 RussianTheaterEWRSpawn[1]:OnSpawnGroup(function(SpawnedGroup)
     local callsign = getCallsign()
-    --MENU_MISSION_COMMAND:New("DESTROY " .. callsign, ewrmenu, function()
-    --    SpawnedGroup:Destroy()
-    --end)
     AddObjective("EWR", getMarkerId())(SpawnedGroup, RussianTheaterEWRSpawn[2], callsign)
     buildCheckEWREvent(SpawnedGroup, callsign)
 end)
 
---local c2menu = MENU_MISSION:New("DESTROY C2S")
 RussianTheaterC2Spawn[1]:OnSpawnGroup(function(SpawnedGroup)
     local callsign = getCallsign()
-    --MENU_MISSION_COMMAND:New("DESTROY " .. callsign, c2menu, function()
-    --    SpawnedGroup:Destroy()
-    --end)
     AddObjective("C2", getMarkerId())(SpawnedGroup, RussianTheaterC2Spawn[2], callsign)
     buildCheckC2Event(SpawnedGroup, callsign)
 end)
@@ -352,15 +263,10 @@ SpawnOPFORCas = function(spawn)
     local casGroup = spawn:Spawn()
 end
 
---local baimenu = MENU_MISSION:New("DESTROY BAIS")
 for i,v in ipairs(baispawns) do
     v[1]:OnSpawnGroup(function(SpawnedGroup)
         local callsign = getCallsign()
-        --MENU_MISSION_COMMAND:New("DESTROY " .. callsign, baimenu, function()
-        --    SpawnedGroup:Destroy()
-        --end)
         AddObjective("BAI", getMarkerId())(SpawnedGroup, v[2], callsign)
-        --AddRussianTheaterBAITarget(SpawnedGroup, v[2], callsign)
     end)
 end
 

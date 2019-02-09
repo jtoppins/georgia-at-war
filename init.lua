@@ -1,14 +1,18 @@
+-- table load_options(void)
 function XAW.state.load_options()
     --[[
     options can be defined from any or all of the following locations:
-        1 global var xaw_mission_options
-        2 global var xaw_mission_options_path
-        3 XAW.options_path
+        1 global var xaw_mission_options - assumes lua encoded
+        2 global var xaw_mission_options_path - assumes json encoded
+        3 XAW.options_path - assumes json encoded
 
     The options locations will be read in reverse order as listed above, options
     listed in later objects will override options noted by earlier objects.
     No locations need to be defined and the compiled in defaults will be used.
     --]]
+    local options = {}
+    options.init = XAW.enum.options.init.RANDOM
+    return options
 end
 
 function XAW.state.set_game(partialstate)

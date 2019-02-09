@@ -60,80 +60,6 @@ local logispawn = {
     category = "Ground vehicles"
 }
 
--- Forward Logistics spawns
-LogiFARPALPHASpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = -90692,
-        ['y'] = 551377
-    },
-    "LogiFARPAlpha"
-}
-
-LogiFARPBRAVOSpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = -83517,
-        ['y'] = 617694
-    },
-    "LogiFARPBravo"
-}
-
-LogiFARPCHARLIESpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = -126126,
-        ['y'] = 420423
-    },
-    "LogiFARPCharlie"
-}
-
-LogiFARPDELTASpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = -98874,
-        ['y'] = 808161
-    },
-    "LogiFARPDelta"
-}
-
-LogiVodySpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = -77884,
-        ['y'] = 761336
-    },
-    "LogiVody"
-}
-
-LogiAdlerSpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = -166113,
-        ['y'] = 462824
-    },
-    "LogiSochi"
-}
-
-LogiGudautaSpawn = {logispawn, "HEMTT TFFT",
-    {
-        ['x'] = -195671,
-        ['y'] = 517492
-    },
-    "LogiGudauta"
-}
-
--- Transport Spawns
-NorthGeorgiaTransportSpawns = {
-    ['Sochi-Adler'] = {Spawner("SochiXport"), Spawner("SochiXportHelo"), LogiAdlerSpawn},
-    ['Gudauta'] = {Spawner("GudautaXport"), Spawner("GudautaXportHelo"), LogiGudautaSpawn},
-    ['Sukhumi-Babushara'] = {Spawner("SukXport"), Spawner("SukXportHelo"), nil},
-    ['Mineralnye Vody'] = {Spawner("VodyXport"), Spawner("VodyXportHelo"), LogiVodySpawn},
-    ['Nalchik'] = {Spawner("NalchikXport"), Spawner("NalchikXportHelo"), nil},
-    ['Mozdok'] = {Spawner("MozdokXport"), Spawner("MozdokXportHelo"), nil},
-    ['Beslan'] = {Spawner("BeslanXport"), Spawner("BeslanXportHelo"), nil}
-}
-
-NorthGeorgiaFARPTransportSpawns = {
-    ["FARP ALPHA"] = {Spawner("FARPAlphaXportHelo"), nil, LogiFARPALPHASpawn},
-    ["FARP BRAVO"] = {Spawner("FARPBravoXportHelo"), nil, LogiFARPBRAVOSpawn},
-    ["FARP CHARLIE"] = {Spawner("FARPCharlieXportHelo"),nil, LogiFARPCHARLIESpawn},
-    ["FARP DELTA"] = {Spawner("FARPDeltaXportHelo"),nil, LogiFARPDELTASpawn},
-}
 scheduledSpawns = {}
 BlueSecurityForcesGroups = {}
 BlueFarpSupportGroups = {}
@@ -166,7 +92,6 @@ RussianTheaterSA10Spawn = { Spawner("SA10"), "SA10" }
 RussianTheaterSA6Spawn = { Spawner("SA6"), "SA6" }
 RussianTheaterEWRSpawn = { Spawner("EWR"), "EWR" }
 RussianTheaterC2Spawn = { Spawner("C2"), "C2" }
---RussianTheaterAirfieldDefSpawn = Spawner("Russia-Airfield-Def")
 RussianTheaterAWACSSpawn = Spawner("A50")
 RussianTheaterAWACSPatrol = Spawner("SU27-RUSAWACS Patrol")
 
