@@ -120,3 +120,63 @@ NorthGeorgiaFARPTransportSpawns = {
     ["FARP DELTA"] = {Spawner("FARPDeltaXportHelo"),nil, LogiFARPDELTASpawn},
 }
 
+VIPSpawns = { "VIPTransport" }
+
+VIPSpawnZones = {
+  {"VIPSpawn-Tuapse", "Tuapse"},
+  {"VIPSpawn-Sochi", "Sochi"},
+  {"VIPSpawn-Gudauta", "Gudauta"},
+  {"VIPSpawn-Vody", "Vody"}
+}
+VIPDropoffZones = {
+  "VIPDropOff-Maykop",
+  "VIPDropOff-MaykopSouth",
+  "VIPDropOff-MaykopNorth",
+  "VIPDropOff-FARPAlpha",
+  "VIPDropOff-FARPBravo",
+  "VIPDropOff-FARPCharlie",
+  "VIPDropOff-FARPDelta",
+  "VIPDropOff-Gudauta",
+  "VIPDropOff-Sochi",
+  "VIPDropOff-Vody"
+}
+
+--Theater Objectives. Must be spawned once, and only where in the ME has them.
+TuapseRefinery = TheaterObjectiveSpawner("Tuapse Refinery", "TuapseRefineryDef")
+ChemSite = TheaterObjectiveSpawner("Chemical Factory", "CHEM SITE VEHICLES")
+AmmoDump = TheaterObjectiveSpawner("Chemical Factory", "AMMO DUMP GROUND FORCES")
+
+TheaterObjectives = {}
+TheaterObjectives["Tuapse Refinery"] = TuapseRefinery
+TheaterObjectives["Chemical Factory"] = ChemSite
+TheaterObjectives["Ammunitions Depot"] = AmmoDump
+
+-- FARP defenses
+FARPALPHADEF = Spawner("FARP ALPHA DEF_1")
+FARPBRAVODEF = Spawner("FARP BRAVO DEF_1")
+FARPCHARLIEDEF = Spawner("FARP CHARLIE DEF_1")
+FARPDELTADEF = Spawner("Russia-Airfield-Def")
+
+-- FARP Support Groups
+FSW = Spawner("FARP Support West")
+
+-- Group spanws for easy randomization
+local allcaps = {
+    RussianTheaterMig212ShipSpawn, RussianTheaterSu272sShipSpawn, RussianTheaterMig292ShipSpawn, RussianTheaterJ11Spawn, RussianTheaterF5Spawn,
+    RussianTheaterMig212ShipSpawnGROUND, RussianTheaterSu272sShipSpawnGROUND, RussianTheaterMig292ShipSpawnGROUND, RussianTheaterJ11SpawnGROUND, RussianTheaterF5SpawnGROUND
+}
+poopcaps = {RussianTheaterMig212ShipSpawn, RussianTheaterF5Spawn}
+goodcaps = {RussianTheaterMig292ShipSpawn, RussianTheaterSu272sShipSpawn, RussianTheaterJ11Spawn}
+poopcapsground = {RussianTheaterMig212ShipSpawnGROUND, RussianTheaterF5SpawnGROUND}
+goodcapsground = {RussianTheaterMig292ShipSpawnGROUND, RussianTheaterSu272sShipSpawnGROUND, RussianTheaterJ11SpawnGROUND}
+baispawns = {RussianHeavyArtySpawn, ArmorColumnSpawn, MechInfSpawn}
+
+StrikeTargetSpawns = {
+  AmmoDumpSpawn,
+  CommsArraySpawn,
+  PowerPlantSpawn
+}
+
+-- Airfield CAS Spawns
+RussianTheaterCASSpawn = Spawner("Su25T-CASGroup")
+RussianTheaterSOUTHCASSpawn = Spawner("Su25T-CASGroupSOUTH")

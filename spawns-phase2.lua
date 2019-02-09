@@ -118,39 +118,6 @@ RussianTheaterMig312ShipSpawn:OnSpawnGroup(function(spawned_group)
     table.insert(enemy_interceptors, spawned_group:getName())
 end)
 
-VIPSpawns = { "VIPTransport" }
-
-VIPSpawnZones = {
-  {"VIPSpawn-Tuapse", "Tuapse"},
-  {"VIPSpawn-Sochi", "Sochi"},
-  {"VIPSpawn-Gudauta", "Gudauta"},
-  {"VIPSpawn-Vody", "Vody"}
-}
-VIPDropoffZones = {
-  "VIPDropOff-Maykop",
-  "VIPDropOff-MaykopSouth",
-  "VIPDropOff-MaykopNorth",
-  "VIPDropOff-FARPAlpha",
-  "VIPDropOff-FARPBravo",
-  "VIPDropOff-FARPCharlie",
-  "VIPDropOff-FARPDelta",
-  "VIPDropOff-Gudauta",
-  "VIPDropOff-Sochi",
-  "VIPDropOff-Vody"
-}
-
---Theater Objectives. Must be spawned once, and only where in the ME has them.
-TuapseRefinery = TheaterObjectiveSpawner("Tuapse Refinery", "TuapseRefineryDef")
-ChemSite = TheaterObjectiveSpawner("Chemical Factory", "CHEM SITE VEHICLES")
-AmmoDump = TheaterObjectiveSpawner("Chemical Factory", "AMMO DUMP GROUND FORCES")
-
-
-TheaterObjectives = {}
-TheaterObjectives["Tuapse Refinery"] = TuapseRefinery
-TheaterObjectives["Chemical Factory"] = ChemSite
-TheaterObjectives["Ammunitions Depot"] = AmmoDump
-
-
 -- Strike Target Spawns
 RussianHeavyArtySpawn = { Spawner("ARTILLERY"), "ARTILLERY" }
 ArmorColumnSpawn = { Spawner("ARMOR COLUMN"), "ARMOR COLUMN" }
@@ -220,12 +187,6 @@ SpawnStaticDefense = function(group_name, position)
     mist.dynAdd(groupData)
 end
 
-StrikeTargetSpawns = {
-  AmmoDumpSpawn,
-  CommsArraySpawn,
-  PowerPlantSpawn
-}
-
 SpawnStrikeTarget = function()
   local zone_index = math.random(10)
   local zone = "NorthStatic" .. zone_index
@@ -233,32 +194,6 @@ SpawnStrikeTarget = function()
   local vec2 = mist.getRandomPointInZone(zone)
   return spawn:Spawn({vec2.x, vec2.y})
 end
--- Naval Strike target Spawns
---PlatformGroupSpawn = {SPAWNSTATIC:NewFromStatic("Oil Platform", country.id.RUSSIA), "Oil Platform"}
-
--- Airfield CAS Spawns
-RussianTheaterCASSpawn = Spawner("Su25T-CASGroup")
-RussianTheaterSOUTHCASSpawn = Spawner("Su25T-CASGroupSOUTH")
-
--- FARP defenses
-FARPALPHADEF = Spawner("FARP ALPHA DEF_1")
-FARPBRAVODEF = Spawner("FARP BRAVO DEF_1")
-FARPCHARLIEDEF = Spawner("FARP CHARLIE DEF_1")
-FARPDELTADEF = Spawner("Russia-Airfield-Def")
-
--- FARP Support Groups
-FSW = Spawner("FARP Support West")
-
--- Group spanws for easy randomization
-local allcaps = {
-    RussianTheaterMig212ShipSpawn, RussianTheaterSu272sShipSpawn, RussianTheaterMig292ShipSpawn, RussianTheaterJ11Spawn, RussianTheaterF5Spawn,
-    RussianTheaterMig212ShipSpawnGROUND, RussianTheaterSu272sShipSpawnGROUND, RussianTheaterMig292ShipSpawnGROUND, RussianTheaterJ11SpawnGROUND, RussianTheaterF5SpawnGROUND
-}
-poopcaps = {RussianTheaterMig212ShipSpawn, RussianTheaterF5Spawn}
-goodcaps = {RussianTheaterMig292ShipSpawn, RussianTheaterSu272sShipSpawn, RussianTheaterJ11Spawn}
-poopcapsground = {RussianTheaterMig212ShipSpawnGROUND, RussianTheaterF5SpawnGROUND}
-goodcapsground = {RussianTheaterMig292ShipSpawnGROUND, RussianTheaterSu272sShipSpawnGROUND, RussianTheaterJ11SpawnGROUND}
-baispawns = {RussianHeavyArtySpawn, ArmorColumnSpawn, MechInfSpawn}
 
 function activateLogi(spawn)
     if spawn then

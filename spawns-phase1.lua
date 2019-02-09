@@ -146,7 +146,6 @@ CommsArraySpawn = StaticSpawner("Comms Array", 3, {
 CommsArraySpawn:OnSpawnGroup(function(staticNames, pos)
     local callsign = getCallsign()
     AddStaticObjective(getMarkerId(), callsign, "CommsArray", staticNames)
-
     SpawnStaticDefense("Comms ArrayDEF", pos)
 end)
 
@@ -180,33 +179,6 @@ SpawnStaticDefense = function(group_name, position)
     groupData.clone = true
     mist.dynAdd(groupData)
 end
-
--- Naval Strike target Spawns
---PlatformGroupSpawn = {SPAWNSTATIC:NewFromStatic("Oil Platform", country.id.RUSSIA), "Oil Platform"}
-
--- Airfield CAS Spawns
-RussianTheaterCASSpawn = Spawner("Su25T-CASGroup")
-
--- FARP defenses
-NWFARPDEF = Spawner("FARP DEFENSE")
-SWFARPDEF = Spawner("FARP DEFENSE #001")
-NEFARPDEF = Spawner("FARP DEFENSE #003")
-SEFARPDEF = Spawner("FARP DEFENSE #002")
-MKFARPDEF = Spawner("FARP DEFENSE #004")
-
--- FARP Support Groups
-FSW = Spawner("FARP Support West")
-
--- Group spanws for easy randomization
-local allcaps = {
-    RussianTheaterMig212ShipSpawn, RussianTheaterSu272sShipSpawn, RussianTheaterMig292ShipSpawn, RussianTheaterJ11Spawn, RussianTheaterF5Spawn,
-    RussianTheaterMig212ShipSpawnGROUND, RussianTheaterSu272sShipSpawnGROUND, RussianTheaterMig292ShipSpawnGROUND, RussianTheaterJ11SpawnGROUND, RussianTheaterF5SpawnGROUND
-}
-poopcaps = {RussianTheaterMig212ShipSpawn, RussianTheaterF5Spawn}
-goodcaps = {RussianTheaterMig292ShipSpawn, RussianTheaterSu272sShipSpawn, RussianTheaterJ11Spawn}
-poopcapsground = {RussianTheaterMig212ShipSpawnGROUND, RussianTheaterF5SpawnGROUND}
-goodcapsground = {RussianTheaterMig292ShipSpawnGROUND, RussianTheaterSu272sShipSpawnGROUND, RussianTheaterJ11SpawnGROUND}
-baispawns = {RussianHeavyArtySpawn, ArmorColumnSpawn, MechInfSpawn}
 
 function activateLogi(spawn)
     if spawn then
@@ -270,12 +242,8 @@ for i,v in ipairs(baispawns) do
     end)
 end
 
---local capsmenu = MENU_MISSION:New("DESTROY CAPS")
 for i,v in ipairs(allcaps) do
     v:OnSpawnGroup(function(SpawnedGroup)
-       -- MENU_MISSION_COMMAND:New("DESTROY " .. SpawnedGroup:GetName(), capsmenu, function()
-        --    SpawnedGroup:Destroy()
-        --end)
         AddRussianTheaterCAP(SpawnedGroup)
     end)
 end

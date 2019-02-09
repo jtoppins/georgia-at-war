@@ -1,48 +1,34 @@
 --Airbases in play.
+-- use to be called "AirbaseSpawns"
 Airbases = {
     ["Gelendzhik"]           = {
-        spwndefence = nil,
+        spwndef     = Spawner("Red Airfield Defense GlensDick 1"),
         spwntranspo = Spawner("GelenRussiaTransport"),
         spwnhelo    = Spawner("GelenHeloTransport"),
     },
     ["Krasnodar-Pashkovsky"] = {
-        spwndefence = nil,
+        spwndef     = Spawner("Red Airfield Defense Kras-Pash 1"),
         spwntranspo = Spawner("KrasPashRussiaTransport"),
         spwnhelo    = Spawner("KrasPashHeloTransport"),
     },
     ["Krasnodar-Center"]     = {
-        spwndefence = nil,
+        spwndef     = Spawner("Red Airfield Defense Kras-Center 1"),
         spwntranspo = Spawner("KrasCenterRussiaTransport"),
         spwnhelo    = Spawner("KrasCenterHeloTransport"),
     },
     ["Novorossiysk"]         = {
-        spwndefence = nil,
+        spwndef     = Spawner("Red Airfield Defense Novo 1"),
         spwntranspo = Spawner("NovoroRussiaTransport"),
         spwnhelo    = Spawner("NovoroHeloTransport"),
     },
     ["Krymsk"]               = {
-        spwndefence = nil,
+        spwndef     = Spawner("Red Airfield Defense Krymsk 1"),
         spwntranspo = Spawner("KrymskRussiaTransport"),
         spwnhelo    = Spawner("KrymskHeloTransport"),
     },
 }
 
 RussianTheaterAirfieldDefSpawn = Spawner("Russia-Airfield-Def")
-
-AirbaseSpawns = {
-  ["Gelendzhik"]={GelenTransportSpawn, GelenHeloSpawn, DefGlensPenis},
-  ["Krasnodar-Pashkovsky"]={KrasnodarPashkovskyTransportSpawn, KrasnodarPashkovskyHeloSpawn, DefKrasPash},
-  ["Krasnodar-Center"]={KrasnodarCenterTransportSpawn, KrasnodarCenterHeloSpawn, DefKrasCenter},
-  ["Novorossiysk"]={NovoroTransportSpawn, NovoroHeloSpawn, DefNovo},
-  ["Krymsk"]={KrymskTransportSpawn, KrymskHeloSpawn, DefKrymsk}
-}
-
--- REDFOR specific airfield defense spawns
-DefGlensPenis = Spawner("Red Airfield Defense GlensDick 1")
-DefKrasPash = Spawner("Red Airfield Defense Kras-Pash 1")
-DefKrasCenter = Spawner("Red Airfield Defense Kras-Center 1")
-DefKrymsk = Spawner("Red Airfield Defense Krymsk 1")
-DefNovo = Spawner("Red Airfield Defense Novo 1")
 
 -- Forward Logistics spawns
 NovoLogiSpawn = {logispawn, "HEMTT TFFT",
@@ -110,3 +96,26 @@ NorthGeorgiaFARPTransportSpawns = {
     ["MK"] = {Spawner("MK FARP HELO"), nil, MaykopLogiSpawn}
 }
 
+-- Airfield CAS Spawns
+RussianTheaterCASSpawn = Spawner("Su25T-CASGroup")
+
+-- FARP defenses
+NWFARPDEF = Spawner("FARP DEFENSE")
+SWFARPDEF = Spawner("FARP DEFENSE #001")
+NEFARPDEF = Spawner("FARP DEFENSE #003")
+SEFARPDEF = Spawner("FARP DEFENSE #002")
+MKFARPDEF = Spawner("FARP DEFENSE #004")
+
+-- FARP Support Groups
+FSW = Spawner("FARP Support West")
+
+-- Group spanws for easy randomization
+local allcaps = {
+    RussianTheaterMig212ShipSpawn, RussianTheaterSu272sShipSpawn, RussianTheaterMig292ShipSpawn, RussianTheaterJ11Spawn, RussianTheaterF5Spawn,
+    RussianTheaterMig212ShipSpawnGROUND, RussianTheaterSu272sShipSpawnGROUND, RussianTheaterMig292ShipSpawnGROUND, RussianTheaterJ11SpawnGROUND, RussianTheaterF5SpawnGROUND
+}
+poopcaps = {RussianTheaterMig212ShipSpawn, RussianTheaterF5Spawn}
+goodcaps = {RussianTheaterMig292ShipSpawn, RussianTheaterSu272sShipSpawn, RussianTheaterJ11Spawn}
+poopcapsground = {RussianTheaterMig212ShipSpawnGROUND, RussianTheaterF5SpawnGROUND}
+goodcapsground = {RussianTheaterMig292ShipSpawnGROUND, RussianTheaterSu272sShipSpawnGROUND, RussianTheaterJ11SpawnGROUND}
+baispawns = {RussianHeavyArtySpawn, ArmorColumnSpawn, MechInfSpawn}

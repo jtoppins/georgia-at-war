@@ -83,11 +83,3 @@ abslots = {
     ['MK Warehouse'] = {"MKFARP Huey 1", "MKFARP Huey 2", "MKFARP Mi-8 1", "MKFARP Mi-8 2", "MK FARP Ka-50"},
 }
 
-logiSlots = {
-    ['Novorossiysk'] = NovoLogiSpawn,
-    ['Gelendzhik'] = nil,
-    ['Krymsk'] = KryLogiSpawn,
-    ['Krasnodar-Center'] = KrasCenterLogiSpawn,
-    ['Krasnodar-Pashkovsky'] = KrasPashLogiSpawn,
-    ['MK Warehouse'] = MaykopLogiSpawn
-}
