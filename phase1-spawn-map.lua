@@ -1,36 +1,243 @@
 --Airbases in play.
 -- use to be called "AirbaseSpawns"
-Airbases = {
+bases = {
     ["Gelendzhik"]           = {
-        spwndef     = Spawner("Red Airfield Defense GlensDick 1"),
-        spwntranspo = Spawner("GelenRussiaTransport"),
-        spwnhelo    = Spawner("GelenHeloTransport"),
+        [coalition.side.RED]  = {
+            def     = Spawner("Red Airfield Defense GlensDick 1"),
+            cargo   = Spawner("GelenRussiaTransport"),
+            helo    = Spawner("GelenHeloTransport"),
+            logi    = nil,
+            players = nil,
+        },
+        [coalition.side.BLUE] = {
+            def     = nil,
+            cargo   = Spawner("GelenTransport"),
+            helo    = Spawner("GelenTransportHelo"),
+            logi    = nil,
+            players = nil,
+        },
     },
     ["Krasnodar-Pashkovsky"] = {
-        spwndef     = Spawner("Red Airfield Defense Kras-Pash 1"),
-        spwntranspo = Spawner("KrasPashRussiaTransport"),
-        spwnhelo    = Spawner("KrasPashHeloTransport"),
+        [coalition.side.RED]  = {
+            def     = Spawner("Red Airfield Defense Kras-Pash 1"),
+            cargo   = Spawner("KrasPashRussiaTransport"),
+            helo    = Spawner("KrasPashHeloTransport"),
+            logi    = nil,
+            players = nil,
+        },
+        [coalition.side.BLUE] = {
+            def     = nil,
+            cargo   = Spawner("KDAR2Transport"),
+            helo    = Spawner("KrasPashTransportHelo"),
+            logi    = nil,
+            players = {
+            -- note I am not sure we need these lists of slots, these
+            -- lists seem like they can be generated from the mission
+            -- reading mist.DBs.humansByName or mist.DBs.humansById
+            -- gives all player spawns in a mission. The problem will
+            -- be figuring out if a slot spawns on a base vs. in the
+            -- air. For now keep these specifically listed slot names
+            -- as mist makes it very difficult to get the information
+            -- easily, mist.DBs.humansByName does not copy the airbaseId.
+            -- The problem with staticlly defined lists is slots can be
+            -- missed (bugs) and so eventually getting to an algorithimic
+            -- approach is better for the misstion designer and game.
+                "Krasnador2 Huey 1",
+                "Kras2 Mi-8 1",
+                "Krasnador2 Huey 2",
+                "Kras2 Mi-8 2",
+            },
+        },
     },
     ["Krasnodar-Center"]     = {
-        spwndef     = Spawner("Red Airfield Defense Kras-Center 1"),
-        spwntranspo = Spawner("KrasCenterRussiaTransport"),
-        spwnhelo    = Spawner("KrasCenterHeloTransport"),
+        [coalition.side.RED]  = {
+            def     = Spawner("Red Airfield Defense Kras-Center 1"),
+            cargo   = Spawner("KrasCenterRussiaTransport"),
+            helo    = Spawner("KrasCenterHeloTransport"),
+            logi    = nil,
+            players = nil,
+        },
+        [coalition.side.BLUE] = {
+            def     = nil,
+            cargo   = Spawner("KDARTransport"),
+            helo    = Spawner("KrasCenterTransportHelo"),
+            logi    = KrasCenterLogiSpawn,
+            players = {
+                "Krasnador Huey 1",
+                "Kras Mi-8 1",
+                "Krasnador Huey 2",
+                "Kras Mi-8 2",
+            },
+        },
     },
     ["Novorossiysk"]         = {
-        spwndef     = Spawner("Red Airfield Defense Novo 1"),
-        spwntranspo = Spawner("NovoroRussiaTransport"),
-        spwnhelo    = Spawner("NovoroHeloTransport"),
+        [coalition.side.RED]  = {
+            def     = Spawner("Red Airfield Defense Novo 1"),
+            cargo   = Spawner("NovoroRussiaTransport"),
+            helo    = Spawner("NovoroHeloTransport"),
+            logi        = nil,
+            players     = nil,
+        },
+        [coalition.side.BLUE] = {
+            def     = nil,
+            cargo   = Spawner("NovoroTransport"),
+            helo    = Spawner("NovoroTransportHelo"),
+            logi    = NovoLogiSpawn,
+            players = {
+                "Novoro Huey 1",
+                "Novoro Huey 2",
+                "Novoro Mi-8 1",
+                "Novoro Mi-8 2",
+            },
+        },
     },
     ["Krymsk"]               = {
-        spwndef     = Spawner("Red Airfield Defense Krymsk 1"),
-        spwntranspo = Spawner("KrymskRussiaTransport"),
-        spwnhelo    = Spawner("KrymskHeloTransport"),
+        [coalition.side.RED]  = {
+            def     = Spawner("Red Airfield Defense Krymsk 1"),
+            cargo   = Spawner("KrymskRussiaTransport"),
+            helo    = Spawner("KrymskHeloTransport"),
+            logi    = nil,
+            players = nil,
+        },
+        [coalition.side.BLUE] = {
+            def     = nil,
+            cargo   = Spawner("KrymskTransport"),
+            helo    = Spawner("KrymskTransportHelo"),
+            logi    = KryLogiSpawn,
+            players = {
+                "Krymsk Gazelle M",
+                "Krymsk Gazelle L",
+                "Krymsk Huey 1",
+                "Krymsk Huey 2",
+                "Krymsk Mi-8 1",
+                "Krymsk Mi-8 2",
+            },
+        },
     },
+    ['SW Warehouse']         = {
+        [coalition.side.RED]  = {
+            def     = Spawner("FARP DEFENSE #001"),
+            cargo   = nil,
+            helo    = nil,
+            logi    = nil,
+            players = nil,
+        },
+        [coalition.side.BLUE] = {
+            def     = nil,
+            cargo   = nil,
+            helo    = Spawner("SW FARP HELO"),
+            logi    = Spawner("FARP Support West"),
+            players = {
+                "SWFARP Huey 1",
+                "SWFARP Huey 2",
+                "SWFARP Mi-8 1",
+                "SWFARP Mi-8 2",
+            },
+        },
+    },
+    ['NW Warehouse']         = {
+        [coalition.side.RED]  = {
+            def     = Spawner("FARP DEFENSE"),
+            cargo   = nil,
+            helo    = nil,
+            logi    = nil,
+            players = nil,
+        },
+        [coalition.side.BLUE] = {
+            def     = nil,
+            cargo   = nil,
+            helo    = Spawner("NW FARP HELO"),
+            logi    = Spawner("FARP Support West"),
+            players = {
+                "NWFARP Huey 1",
+                "NWFARP Huey 2",
+                "NWFARP Mi-8 1",
+                "NWFARP Mi-8 2",
+                "NWFARP KA50",
+            },
+        },
+    },
+    ['SE Warehouse']         = {
+        [coalition.side.RED]  = {
+            def     = Spawner("FARP DEFENSE #002"),
+            cargo   = nil,
+            helo    = nil,
+            logi    = nil,
+            players = nil,
+
+        },
+        [coalition.side.BLUE] = {
+            def     = nil,
+            cargo   = nil,
+            helo    = Spawner("SE FARP HELO"),
+            logi    = SEFARPLogiSpawn,
+            players = {
+                "SEFARP Gazelle M",
+                "SEFARP Gazelle L",
+                "SEFARP Huey 1",
+                "SEFARP Huey 2",
+                "SEFARP Mi-8 1",
+                "SEFARP Mi-8 2",
+                "SEFARP KA50",
+            },
+        },
+    },
+    ['NE Warehouse']         = {
+        [coalition.side.RED]  = {
+            def     = Spawner("FARP DEFENSE #003"),
+            cargo   = nil,
+            helo    = nil,
+            logi    = nil,
+            players = nil,
+
+        },
+        [coalition.side.BLUE] = {
+            def     = nil,
+            cargo   = nil,
+            helo    = Spawner("NE FARP HELO"),
+            logi    = Spawner("FARP Support West"),
+            players = {
+                "NEFARP Huey 1",
+                "NEFARP Huey 2",
+                "NEFARP Mi-8 1",
+                "NEFARP Mi-8 2",
+            },
+        },
+    },
+    ['MK Warehouse']         = {
+        [coalition.side.RED]  = {
+            def     = Spawner("FARP DEFENSE #004"),
+            cargo   = nil,
+            helo    = nil,
+            logi    = nil,
+            players = nil,
+
+        },
+        [coalition.side.BLUE] = {
+            def     = nil,
+            cargo   = nil,
+            helo    = Spawner("MK FARP HELO"),
+            logi    = MaykopLogiSpawn,
+            players = {
+                "MKFARP Huey 1",
+                "MKFARP Huey 2",
+                "MKFARP Mi-8 1",
+                "MKFARP Mi-8 2",
+                "MK FARP Ka-50"
+            },
+        },
+    },
+    --[[
+    ['Anapa Area FARP East'] = {
+FSW = Spawner("FARP Support West #001")
+    },
+    ['Anapa Area FARP West'] = {
+FSW = Spawner("FARP Support West #002")
+    },
+    --]]
 }
 
-RussianTheaterAirfieldDefSpawn = Spawner("Russia-Airfield-Def")
-
--- Forward Logistics spawns
+-- Forward Logistics spawns - I don't understand what these are for
 NovoLogiSpawn = {logispawn, "HEMTT TFFT",
     {
         ['x'] = -39857.5703125,
@@ -79,35 +286,8 @@ SEFARPLogiSpawn = {logispawn, "HEMTT TFFT",
     "sefarplogizone"
 }
 
--- Transport Spawns
-NorthGeorgiaTransportSpawns = {
-    ['Novorossiysk'] = {Spawner("NovoroTransport"), Spawner("NovoroTransportHelo"), NovoLogiSpawn},
-    ['Gelendzhik'] = {Spawner("GelenTransport"), Spawner("GelenTransportHelo"), nil},
-    ['Krasnodar-Center'] = {Spawner("KDARTransport"), Spawner("KrasCenterTransportHelo"), KrasCenterLogiSpawn},
-    ['Krasnodar_Pashkovsky'] = {Spawner("KDAR2Transport"), Spawner("KrasPashTransportHelo"), nil},
-    ['Krymsk'] = {Spawner("KrymskTransport"), Spawner("KrymskTransportHelo"), KryLogiSpawn}
-}
-
-NorthGeorgiaFARPTransportSpawns = {
-    ["NW"] = {Spawner("NW FARP HELO"), nil, nil},
-    ["NE"] = {Spawner("NE FARP HELO"), nil, nil},
-    ["SW"] = {Spawner("SW FARP HELO"),nil, nil},
-    ["SE"] = {Spawner("SE FARP HELO"),nil, SEFARPLogiSpawn},
-    ["MK"] = {Spawner("MK FARP HELO"), nil, MaykopLogiSpawn}
-}
-
 -- Airfield CAS Spawns
 RussianTheaterCASSpawn = Spawner("Su25T-CASGroup")
-
--- FARP defenses
-NWFARPDEF = Spawner("FARP DEFENSE")
-SWFARPDEF = Spawner("FARP DEFENSE #001")
-NEFARPDEF = Spawner("FARP DEFENSE #003")
-SEFARPDEF = Spawner("FARP DEFENSE #002")
-MKFARPDEF = Spawner("FARP DEFENSE #004")
-
--- FARP Support Groups
-FSW = Spawner("FARP Support West")
 
 -- Group spanws for easy randomization
 local allcaps = {
