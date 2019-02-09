@@ -30,6 +30,7 @@ function respawnHAWKFromState(_points)
 
     -- spawn a helper unit that will "build" the site
     local _SpawnObject = Spawner( "HawkHelo" )
+    --local _SpawnObject = Spawner( "SukXportHelo" )
     local _SpawnGroup = _SpawnObject:SpawnAtPoint({x=_points["Hawk pcp"]["x"], y=_points["Hawk pcp"]["z"]})
     local _unit=_SpawnGroup:getUnit(1)
 
@@ -63,10 +64,17 @@ local logispawn = {
 scheduledSpawns = {}
 DestructibleStatics = {}
 DestroyedStatics = {}
+BlueSecurityForcesGroups = {}
+BlueFarpSupportGroups = {}
 -- Support Spawn
 TexacoSpawn = Spawner("Texaco")
 TexacoSpawn:OnSpawnGroup(function(grp)
     scheduledSpawns[grp:getUnit(1):getName()] = {TexacoSpawn, 600}
+end)
+
+ArcoSpawn = Spawner("Arco")
+ArcoSpawn:OnSpawnGroup(function(grp)
+    scheduledSpawns[grp:getUnit(1):getName()] = {ArcoSpawn, 600}
 end)
 
 ShellSpawn = Spawner("Shell")
@@ -135,6 +143,7 @@ AmmoDumpSpawn:OnSpawnGroup(function(staticNames, pos)
     local callsign = getCallsign()
     AddStaticObjective(getMarkerId(), callsign, "AmmoDump", staticNames)
     SpawnStaticDefense("Ammo DumpDEF", pos)
+    GameStats:increment("ammo")
 end)
 
 CommsArraySpawn = StaticSpawner("Comms Array", 3, {
@@ -147,6 +156,7 @@ CommsArraySpawn:OnSpawnGroup(function(staticNames, pos)
     local callsign = getCallsign()
     AddStaticObjective(getMarkerId(), callsign, "CommsArray", staticNames)
     SpawnStaticDefense("Comms ArrayDEF", pos)
+    GameStats:increment("comms")
 end)
 
 PowerPlantSpawn = StaticSpawner("Power Plant", 7, {
@@ -180,6 +190,14 @@ SpawnStaticDefense = function(group_name, position)
     mist.dynAdd(groupData)
 end
 
+SpawnStrikeTarget = function()
+  local zone_index = math.random(10)
+  local zone = "NorthStatic" .. zone_index
+  local spawn = randomFromList(StrikeTargetSpawns)
+  local vec2 = mist.getRandomPointInZone(zone)
+  return spawn:Spawn({vec2.x, vec2.y})
+end
+
 function activateLogi(spawn)
     if spawn then
         local statictable = mist.utils.deepCopy(logispawn)
@@ -200,10 +218,18 @@ end
 --    end)
 --end
 
+DestructibleStatics = {
+    'TUAPSE',
+    'CHEM SITE',
+    'AMMO DUMP'
+}
+DestroyedStatics = {}
+
 RussianTheaterAWACSSpawn:OnSpawnGroup(function(SpawnedGroup)
     local callsign = "Overseer"
     AddObjective("AWACS", getMarkerId())(SpawnedGroup, "AWACS", callsign)
     RussianTheaterAWACSPatrol:Spawn()
+    GameStats:increment("awacs")
 end)
 
 RussianTheaterSA6Spawn[1]:OnSpawnGroup(function(SpawnedGroup)
@@ -222,12 +248,14 @@ RussianTheaterEWRSpawn[1]:OnSpawnGroup(function(SpawnedGroup)
     local callsign = getCallsign()
     AddObjective("EWR", getMarkerId())(SpawnedGroup, RussianTheaterEWRSpawn[2], callsign)
     buildCheckEWREvent(SpawnedGroup, callsign)
+    GameStats:increment("ewr")
 end)
 
 RussianTheaterC2Spawn[1]:OnSpawnGroup(function(SpawnedGroup)
     local callsign = getCallsign()
     AddObjective("C2", getMarkerId())(SpawnedGroup, RussianTheaterC2Spawn[2], callsign)
     buildCheckC2Event(SpawnedGroup, callsign)
+    GameStats:increment("c2")
 end)
 
 SpawnOPFORCas = function(spawn)
@@ -239,19 +267,21 @@ for i,v in ipairs(baispawns) do
     v[1]:OnSpawnGroup(function(SpawnedGroup)
         local callsign = getCallsign()
         AddObjective("BAI", getMarkerId())(SpawnedGroup, v[2], callsign)
+        GameStats:increment("bai")
     end)
 end
 
 for i,v in ipairs(allcaps) do
     v:OnSpawnGroup(function(SpawnedGroup)
         AddRussianTheaterCAP(SpawnedGroup)
+        GameStats:increment("caps")
     end)
 end
 
 activeBlueXports = {}
 
-addToActiveBlueXports = function(group, defense_group_spawner, target, is_farp, xport_data)
-    activeBlueXports[group:getName()] = {defense_group_spawner, target, is_farp, xport_data}
+addToActiveBlueXports = function(group, defense_group_spawner, target, is_farp, xport_data, logiunit)
+    activeBlueXports[group:getName()] = {defense_group_spawner, target, is_farp, xport_data, logiunit}
     log("Added " .. group:getName() .. " to active blue transports")
 end
 
@@ -263,13 +293,13 @@ for name,spawn in pairs(NorthGeorgiaTransportSpawns) do
     for i=1,2 do
         if i == 1 then
             spawn[i]:OnSpawnGroup(function(SpawnedGroup)
-                addToActiveBlueXports(SpawnedGroup, AirfieldDefense, name, false, spawn[i])
+                addToActiveBlueXports(SpawnedGroup, AirfieldDefense, name, false, spawn[i], spawn[3])
             end)
         end
 
         if i == 2 then
             spawn[i]:OnSpawnGroup(function(SpawnedGroup)
-                addToActiveBlueXports(SpawnedGroup, AirfieldDefense, name, false, spawn[i])
+                addToActiveBlueXports(SpawnedGroup, AirfieldDefense, name, false, spawn[i], spawn[3])
             end)
         end
 
@@ -278,7 +308,7 @@ end
 
 for name,spawn in pairs(NorthGeorgiaFARPTransportSpawns) do
     spawn[1]:OnSpawnGroup(function(SpawnedGroup)
-        addToActiveBlueXports(SpawnedGroup, AirfieldDefense, name, true, spawn)
+        addToActiveBlueXports(SpawnedGroup, AirfieldDefense, name, true, spawn, spawn[3])
     end)
 end
 
