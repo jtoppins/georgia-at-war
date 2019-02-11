@@ -5,12 +5,13 @@
 --  It is held in this seperate namespace to reduce name collision.
 --]]
 
-XAW = {
+xaw = {
     options_path = lfs.writedir() .. "Scripts\\xaw-mission-options.json",
     start_state_path = lfs.writedir() .. "Scripts\\xaw-mission-start-state.json",
     run_state_path = lfs.writedir() .. "Scripts\\xaw-mission-state.json",
     game_options = {},
     game_state = {},
+    mission = {}
 
     enum = {
         options = {

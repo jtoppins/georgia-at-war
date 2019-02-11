@@ -237,6 +237,9 @@ FSW = Spawner("FARP Support West #002")
     --]]
 }
 
+assets = {
+}
+
 -- Forward Logistics spawns - I don't understand what these are for
 NovoLogiSpawn = {logispawn, "HEMTT TFFT",
     {

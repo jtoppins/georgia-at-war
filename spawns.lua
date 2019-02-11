@@ -190,14 +190,6 @@ SpawnStaticDefense = function(group_name, position)
     mist.dynAdd(groupData)
 end
 
-SpawnStrikeTarget = function()
-  local zone_index = math.random(10)
-  local zone = "NorthStatic" .. zone_index
-  local spawn = randomFromList(StrikeTargetSpawns)
-  local vec2 = mist.getRandomPointInZone(zone)
-  return spawn:Spawn({vec2.x, vec2.y})
-end
-
 function activateLogi(spawn)
     if spawn then
         local statictable = mist.utils.deepCopy(logispawn)

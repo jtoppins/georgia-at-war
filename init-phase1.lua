@@ -22,8 +22,8 @@ if statefile then
 
         if coalition == 1 then
             if AirbaseSpawns[name] then
-            AirbaseSpawns[name][3]:Spawn()
-            flagval = 100
+                AirbaseSpawns[name][3]:Spawn()
+                flagval = 100
             end
         elseif coalition == 2 then
             AirfieldDefense:SpawnAtPoint({
@@ -187,11 +187,11 @@ if statefile then
                 x = data.pos.x,
                 y = data.pos.z
             })
-              local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
-              table.insert(ctld.jtacGeneratedLaserCodes, _code)
-              ctld.JTACAutoLase(_spawnedGroup:getName(), _code)
-            end
+            local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+            table.insert(ctld.jtacGeneratedLaserCodes, _code)
+            ctld.JTACAutoLase(_spawnedGroup:getName(), _code)
         end
+    end
 
     local destroyedStatics = saved_game_state["Theaters"]["Russian Theater"]["DestroyedStatics"]
     if destroyedStatics ~= nil then
