@@ -63,10 +63,38 @@ types of assets:
 hidden lists managed by the state class:
     basemap; points to airbases and farps
 
+
+current assets used in GAW:
+* airbase
+* farp
+* C2
+* theater objectives
+* strike tgts (ammo dumps, comms, power plant)
+* SAMs
+* ewr
+* convoy
+* cas targets
+* bai
+* tanker
+* AWACS (blue & redfor)
+* interceptors
+* CAP
+* vip
+* naval strikes
+
+the above can be grouped into:
+* base:     airbase, farp
+* facility: C2, theater objective, strike tgt, SAM, ewr
+* ground:   convoy, cas tgt, bai
+* air:      AAR tanker, AWACS, interceptor, CAP, strike a/c
+* naval:    naval strikes
+
+vip ?
+
 --]]
 
 do
-    xaw.state = {}
+    state = {}
 
     local GameState = {
         __call = function(cls)
@@ -74,7 +102,7 @@ do
             pt.dirty         = false
             pt.init          = true
             pt.facilities    = {}
-            pt.ground_groups = {}
+            pt.groups        = {}
             pt.stats         = {}
 
             local gstbl = setmetatable(pt, cls)
@@ -126,7 +154,10 @@ do
     function GameState:export()
         -- export a copy of the game state in a
         -- flat table representation
+        self:dirtyClear()
     end
 
-    xaw.state.GameState = GameState
+    state.GameState = GameState
+
+    return state
 end

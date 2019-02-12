@@ -65,7 +65,7 @@ do
         start_state        = "mission-start-state.json",
         saved_state        = "mission-state.json",
         game_options       = nil,
-        game_state         = nil,
+        gamestate          = nil,
         eventq             = nil,
         eventprocessor     = nil,
         redforcmdr         = nil,
@@ -80,20 +80,16 @@ do
         },
     }
 
-    function xaw:subsysteminit()
+    -- prototype: void subsystemsinit(void)
+    function xaw:subsystemsinit()
         -- TODO: do "init all subsystems" from flowchart
-        self.game_state     = state.GameState()
         self.eventq         = PQueue()
-        self.eventprocessor = event.EventProcessor(self.eventq)
-        self.redforcmdr     = cmdr.Commander(coalition.side.RED)
-
-        -- register event handlers, both DCS and XAW handlers
-        -- TODO: not sure exactly how this should work
-        cmdr.registerEventHandlers(self.eventprocessor)
-        state.registerEventHandlers(self.eventprocessor)
-        self.redforcmdr:registerEventHandlers()
+        self.eventprocessor = event.EventProcessor(self)
+        self.gamestate      = state.GameState(self)
+        self.redforcmdr     = cmdr.Commander(self, coalition.side.RED)
     end
 
+    -- prototype: void init(void)
     function xaw:init()
         self.game_options = mission.load_options()
 
@@ -140,7 +136,7 @@ do
             --  necessarily need to dictate the storage format of the in-memory
             --  game_state either.
             local etype = 0
-            if data.type == state.enum.type.FACILITY then
+            if data.type == state.enum.types.FACILITY then
                 etpye = event.enum.types.SPAWNFACILITY
             else
                 assert(false, "problems")
