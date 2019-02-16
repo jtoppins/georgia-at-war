@@ -84,10 +84,19 @@ current assets used in GAW:
 
 the above can be grouped into:
 * base:     airbase, farp
+    attrs: coalition, def-groups, type, tplname, capturable
 * facility: C2, theater objective, strike tgt, SAM, ewr
-* ground:   convoy, cas tgt, bai
-* air:      AAR tanker, AWACS, interceptor, CAP, strike a/c
-* naval:    naval strikes
+    attrs: coalition, def-groups, type, healthtbl, status, tplname, spawnmethod,
+           mobile
+* ground: convoy, cas tgt, bai
+    attrs: coalition, def-groups, type, healthtbl, status, tplname, spawnmethod,
+           mobile
+* air:    AAR tanker, AWACS, interceptor, CAP, strike a/c
+    (the air entries should represent missions otherwise we do not need
+     to track individual units/groups but instead if the )
+* naval:  naval strikes
+    attrs: coalition, def-groups, type, healthtbl, status, tplname, spawnmethod,
+           mobile
 
 vip ?
 
@@ -104,6 +113,7 @@ do
             pt.facilities    = {}
             pt.groups        = {}
             pt.stats         = {}
+            pt.notifiers = {}
 
             local gstbl = setmetatable(pt, cls)
             cls.__index = cls
@@ -122,6 +132,13 @@ do
     function GameState:initClear()
         self.init = false
     end
+
+    --[[
+    state notifications:
+    add
+    remove
+    initcomplete
+    --]]
 
     function GameState:facilityAdd(name, attrs)
     end
@@ -158,6 +175,26 @@ do
     end
 
     state.GameState = GameState
+
+
+    -- prototype: void registerNotifier(type, handler)
+    function EventProcessor:registerNotifier(t, handler)
+        assert(type(handler) == 'function', "handler must be a function")
+        if not self.notifiers[t] then
+            self.notifiers[t] = {}
+        end
+        table.insert(self.notifiers[t], handler)
+    end
+
+    -- prototype: void unregisterNotifier(type, handler)
+    function EventProcessor:unregisterNotifier(t, handler)
+        assert(type(handler) == 'function', "handler must be a function")
+        for id, data in pairs(self.notifiers[t]) do
+            if data == handler then
+                table.remove(self.notfiers[t], id)
+            end
+        end
+    end
 
     return state
 end

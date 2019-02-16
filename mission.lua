@@ -1,8 +1,15 @@
 do
-	local xaw  = require('xaw')
 	local json = require('xaw.libs.json')
 
 	local mission = {}
+	enum = {
+            options = {
+                init = {
+                    ["RANDOM"] = 0,
+                    ["STATIC"] = 1,
+                },
+            },
+        },
 
 	-- prototype: table load_options(void)
 	function mission.load_options()
@@ -26,9 +33,9 @@ do
 		return json:decode(statefile:read("*all"))
 	end
 
-	-- prototype: void save_state(FileObject)
-	function mission.save_state(statefile)
-		statefile:write(json:encode(xaw.game_state:export()))
+	-- prototype: void save_state(FileObject, GameState)
+	function mission.save_state(statefile, gamestate)
+		statefile:write(json:encode(gamestate:export()))
 	end
 
 	-- prototype: table gen_state(InitState)

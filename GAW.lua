@@ -118,32 +118,6 @@ TheaterObjectiveSpawner = function(objectiveName, groupName)
   }
 end
 
-StaticSpawner = function(groupName, numberInGroup, groupOffsets)
-  local CallBack = {}
-  return {
-    Spawn = function(self, firstPos)
-      local names = {}
-      for i=1,numberInGroup do
-        local groupData = mist.getGroupData(groupName .. i)
-        groupData.units[1].x = firstPos[1] + groupOffsets[i][1]
-        groupData.units[1].y = firstPos[2] + groupOffsets[i][2]
-        groupData.clone = true
-        table.insert(names, mist.dynAddStatic(groupData).name)
-      end
-
-      if CallBack.func then
-        if not CallBack.args then CallBack.args = {} end
-        mist.scheduleFunction(CallBack.func, {names, firstPos, unpack(CallBack.args)}, timer.getTime() + 1)
-      end
-
-      return names
-    end,
-    OnSpawnGroup = function(self, f, args)
-      CallBack.func = f
-      CallBack.args = args
-    end
-  }
-end
 
 GetCoordinate = function(grp)
   local firstUnit = grp:getUnit(1)

@@ -45,7 +45,7 @@ do
     -- required by XAW framework
     --]]
     local assertmsg = "XAW requires DCS mission scripting environment to be" ..
-                " modified the file needing to be changed can be found at" ..
+                " modified, the file needing to be changed can be found at" ..
                 " $DCS_ROOT\Scripts\MissionScripting.lua. Comment out the" ..
                 " removal of lfs and io and the setting of 'require' to nil."
     if not lfs or not io or not require then
@@ -56,37 +56,33 @@ do
     local mission = require('xaw.mission')
     local state   = require('xaw.state')
     local cmdr    = require('xaw.ai.commander')
-    local event   = require('xaw.event')
+    local cmd     = require('xaw.commands')
     local PQueue  = require('containers.pqueue')
 
     local xaw = {
-        config_path_prefix = lfs.writedir() .. "xawconfig",
+        config_path_prefix = lfs.writedir() .. "xawconfig\\",
         options_path       = "mission-options.json",
         start_state        = "mission-start-state.json",
         saved_state        = "mission-state.json",
         game_options       = nil,
         gamestate          = nil,
-        eventq             = nil,
-        eventprocessor     = nil,
+        cmdq               = nil,
+        cmdprocessor       = nil,
         redforcmdr         = nil,
-
-        enum = {
-            options = {
-                init = {
-                    ["RANDOM"] = 0,
-                    ["STATIC"] = 1,
-                },
-            },
-        },
     }
 
     -- prototype: void subsystemsinit(void)
     function xaw:subsystemsinit()
         -- TODO: do "init all subsystems" from flowchart
-        self.eventq         = PQueue()
-        self.eventprocessor = event.EventProcessor(self)
-        self.gamestate      = state.GameState(self)
-        self.redforcmdr     = cmdr.Commander(self, coalition.side.RED)
+        self.cmdq           = PQueue()
+        self.cmdprocessor   = cmd.CmdProcessor(self.cmdq)
+        self.gamestate      = state.GameState()
+        self.redforcmdr     = cmdr.Commander(coalition.side.RED)
+
+        self.gamestate:setcmdq(self.cmdq)
+
+        -- register state notification handlers
+        self.redforcmdr:registerStateNotifications(self.gamestate)
     end
 
     -- prototype: void init(void)
